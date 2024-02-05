@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        welcome to my shop where you can buy different items...
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} - My Shop
+    {% else %}
+        see our new collections - My Shop
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="row my_row_class">
+            <div class="mx-auto">
+
+
+            <p><a href="{% url 'shopingapp:allproduct' %}">our product collections</a></p>
+        </div>
+           </div>
+    </div>
+
+        <div class="mx_auto">
+              {% if category %}
+            <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}" width="200px;" height="200px">
+        </div>
+        <br>
+        <div>
+            <h1 class="text center my_title">{{category.name}}</h1>
+            <p class="text-justify">{{category.description}}</p>
+        </div>
+    {% else %}
+        <div>
+            <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}"  alt="our product" width="1500px;">
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our product collections</h1>
+            <p class="text-justify"><b>there’s nothing like a day of shopping to make you feel good. Whether you’re buying something for yourself or for someone else, the sense of satisfaction you get from finding the perfect item is hard to beat. And when it comes to shopping, there’s no need to stick to just one type of store. From department stores to boutiques, there’s a world of shopping possibilities out there.</b></p>
+        </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="row mx_auto">
+            {% for product in products.object_list %}
+                <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-3">
+                    <div class="card text-center" style="min-width:12rem;">
+                        <a href="{{ product.get_url }}"><img class="card-img-top my_image" src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 253px; height: 250px;"></a>
+                    </div>
+                    <div class="card-body">
+                        <h4>{{product.name}}</h4>
+                        <p>{{product.price}}</p>
+                    </div>
+
+                </div>
+     {% endfor %}
+        </div>
+<div class="mx-auto">
+    {% if products.paginator.num_pages > 1 %}
+
+  <hr>
+    <div class="text-center">
+        {% for pg in products.paginator.page_range %}
+        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+
+        {% endfor %}
+    </div>
+      {% endif %}
+</div>
+        <br>
+    </div>
+{% endblock %}
